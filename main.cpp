@@ -13,6 +13,13 @@
 
 
 
+
+
+
+
+
+
+
 static std::unordered_map<std::string, std::string> USER_TABLE = {
     {"admin", "123456"},
     {"user",  "123456"}
@@ -227,4 +234,5 @@ int main(int argc, char** argv) {
 
     std::cout << "Face API running on http://0.0.0.0:18080" << std::endl;
     app.port(18080).multithreaded().run();
+
 }
