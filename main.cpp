@@ -24,7 +24,7 @@
 
 static std::unordered_map<std::string, std::string> USER_TABLE = {
     {"admin", "123456"},
-    {"user",  "123456"}
+    {"user",  "12345678"}
 };
 
 
@@ -245,3 +245,4 @@ int main(int argc, char** argv) {
     app.port(18080).multithreaded().run();
 
 }
+
