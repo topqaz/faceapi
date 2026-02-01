@@ -1,5 +1,8 @@
 #include "FaceEngine.h"
 
+
+
+
 #include "auth.h"
 
 #include <crow.h>
@@ -10,8 +13,7 @@
 #include <unordered_map>
 #include <iostream>
 #include <cstdlib>
-
-
+#include <chrono>
 
 
 
@@ -33,12 +35,14 @@ int main(int argc, char** argv) {
 
     if (!engine.init("models/face_detector.csta",
                      "models/face_landmarker_pts5.csta",
-                     "models/face_recognizer.csta")) {
+                     "models/face_recognizer_light.csta")) {
         std::cerr << "FaceEngine init failed!" << std::endl;
         return 1;
     }
 
     crow::App<crow::CORSHandler> app;
+
+
 
 
     auto& cors = app.get_middleware<crow::CORSHandler>();
@@ -194,14 +198,18 @@ int main(int argc, char** argv) {
         std::vector<uchar> data(msg.parts[0].body.begin(),
                            msg.parts[0].body.end());
         cv::Mat img = cv::imdecode(data, cv::IMREAD_COLOR);
-
+        // cv::resize(img,img,cv::Size(640,480));
         if (img.empty()) {
             res["code"] = -2;
             res["msg"] = "invalid image";
             return crow::response(400, res);
         }
-
+        auto start = std::chrono::steady_clock::now();
         auto results = engine.detectAndRecognize(img, 0.6f);
+        auto end = std::chrono::steady_clock::now();
+        auto cost = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+
+        std::cout << "[FaceAPI] cost time: " << cost << " ms" << std::endl;
         std::vector<FaceRecord> db;
         engine.faceDB.getAllFaces(db);
 
@@ -229,6 +237,7 @@ int main(int argc, char** argv) {
         }
 
         res["faces"] = std::move(arr);
+
         return crow::response(res);
     });
 
