@@ -1,8 +1,5 @@
 #include "FaceEngine.h"
 
-
-
-
 #include "auth.h"
 
 #include <crow.h>
@@ -24,7 +21,7 @@
 
 static std::unordered_map<std::string, std::string> USER_TABLE = {
     {"admin", "123456"},
-    {"user",  "12345678"}
+    {"user",  "123"}
 };
 
 
